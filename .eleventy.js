@@ -176,6 +176,12 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("css");
+  // 复制书籍文件夹中的图片（cover.jpg/png 等）
+  eleventyConfig.addPassthroughCopy("books/**/*.jpg");
+  eleventyConfig.addPassthroughCopy("books/**/*.jpeg");
+  eleventyConfig.addPassthroughCopy("books/**/*.png");
+  eleventyConfig.addPassthroughCopy("books/**/*.webp");
+  eleventyConfig.addPassthroughCopy("books/**/*.avif");
   // We need to copy cached.js only if GA is used
   eleventyConfig.addPassthroughCopy(GA_ID ? "js" : "js/*[!cached].*");
   eleventyConfig.addPassthroughCopy("fonts");
@@ -188,6 +194,103 @@ module.exports = function (eleventyConfig) {
   // Unfortunately this means .eleventyignore needs to be maintained redundantly.
   // But without this the JS build artefacts doesn't trigger a build.
   eleventyConfig.setUseGitIgnore(false);
+  eleventyConfig.addCollection("books", function(collectionApi) {
+    // 获取 books 目录下所有子文件夹中的 Markdown 文件
+    const chapters = collectionApi.getFilteredByGlob("books/*/*.md");
+
+    // 按 book 分类（从文件夹路径提取书名）
+    const booksMap = {};
+
+    chapters.forEach(item => {
+      // 从文件路径提取书名：books/书名/章节.md（统一使用 / 分隔）
+      const normalizedPath = item.inputPath.replace(/\\/g, '/');
+      const match = normalizedPath.match(/books\/([^/]+)\//);
+      if (match) {
+        const bookName = match[1];
+        if (!booksMap[bookName]) booksMap[bookName] = [];
+        booksMap[bookName].push(item);
+      }
+    });
+
+    // 对每本书的章节排序，并返回数组结构
+    const books = [];
+    for (let bookName in booksMap) {
+      // 过滤掉 preface.md（前言单独处理）
+      const allItems = booksMap[bookName];
+      const chapters = allItems.filter(item => {
+        const slug = item.inputPath.replace(/\\/g, '/').split('/').pop().toLowerCase();
+        return !slug.startsWith('preface');
+      });
+      chapters.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+      // 检测封面文件
+      const bookDir = path.join('books', bookName);
+      let cover = null;
+      const coverExtensions = ['jpg', 'jpeg', 'png', 'webp', 'avif'];
+      for (const ext of coverExtensions) {
+        const coverPath = path.join(bookDir, `cover.${ext}`);
+        if (fs.existsSync(coverPath)) {
+          cover = `/books/${bookName}/cover.${ext}`;
+          break;
+        }
+      }
+
+      // 检测前言文件 preface.md（直接读取文件内容）
+      let preface = null;
+      const prefaceItem = allItems.find(item => {
+        const slug = item.inputPath.replace(/\\/g, '/').split('/').pop().toLowerCase();
+        return slug.startsWith('preface');
+      });
+      if (prefaceItem) {
+        // 直接读取文件并渲染 markdown
+        const prefacePath = prefaceItem.inputPath;
+        if (fs.existsSync(prefacePath)) {
+          const rawContent = fs.readFileSync(prefacePath, 'utf8');
+          // 移除 front matter
+          const contentWithoutFrontMatter = rawContent.replace(/^---\n[\s\S]*?\n---\n*/, '');
+          // 创建 markdown 渲染器并渲染
+          const md = markdownIt({ html: true, breaks: true, linkify: true });
+          const htmlContent = md.render(contentWithoutFrontMatter);
+          preface = {
+            content: htmlContent,
+            url: prefaceItem.url
+          };
+        }
+      }
+
+      books.push({
+        name: bookName,
+        chapters: chapters,
+        cover: cover,
+        preface: preface
+      });
+    }
+
+    return books;
+  });
+
+  // 按书名索引的章节集合，方便模板中查找
+  eleventyConfig.addCollection("bookChapters", function(collectionApi) {
+    const chapters = collectionApi.getFilteredByGlob("books/*/*.md");
+    const booksMap = {};
+
+    chapters.forEach(item => {
+      const normalizedPath = item.inputPath.replace(/\\/g, '/');
+      const match = normalizedPath.match(/books\/([^/]+)\//);
+      if (match) {
+        const bookName = match[1];
+        if (!booksMap[bookName]) booksMap[bookName] = [];
+        booksMap[bookName].push(item);
+      }
+    });
+
+    // 排序
+    for (let bookName in booksMap) {
+      booksMap[bookName].sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+    }
+
+    return booksMap;
+  });
 
   /* Markdown Overrides */
   let markdownLibrary = markdownIt({

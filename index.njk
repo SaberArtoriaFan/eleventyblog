@@ -1,18 +1,29 @@
 ---
-title: Title. Update me.
 layout: layouts/home.njk
-description: Description. Update me.
-image: https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg
-date: Last Modified
+title: 小说书架
 ---
 
-<p>
-  This is a demo website based on 
-  <a href="https://www.industrialempathy.com/posts/eleventy-high-performance-blog/">eleventy-high-performance-blog</a>.
-</p>
+<section class="books-gallery">
+  <h1>📚 书架</h1>
+  <p>欢迎来到我的小说书架，这里收藏着我的作品。</p>
 
-<div id="posts">
-  <h2>Posts</h2>
-  {% set postslist = collections.posts %}
-  {% include "postslist.njk" %}
-</div>
+  <div class="books-grid">
+  {% for book in collections.books %}
+    <article class="book-card">
+      <a href="/books/{{ book.name }}/">
+        <div class="book-cover">
+          {% if book.cover %}
+          <img src="{{ book.cover }}" alt="{{ book.name }}" loading="lazy" width="150">
+          {% else %}
+          <div class="book-cover-placeholder">{{ book.name }}</div>
+          {% endif %}
+        </div>
+        <h2>{{ book.name }}</h2>
+        <p class="chapter-count">{{ book.chapters | length }} 章</p>
+      </a>
+    </article>
+  {% else %}
+    <p>书架空空如也，敬请期待...</p>
+  {% endfor %}
+  </div>
+</section>

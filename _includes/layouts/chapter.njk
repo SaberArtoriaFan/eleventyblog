@@ -1,0 +1,33 @@
+---
+templateClass: tmpl-chapter
+---
+{% extends "layouts/base.njk" %}
+
+{% block extraArticleHeader %}
+<aside>
+  <a href="/books/{{ book }}/" class="book-link">📚 {{ book }}</a>
+</aside>
+{% endblock %}
+
+{% block article %}
+{{ content | safe }}
+
+<hr>
+
+<nav class="chapter-nav">
+{% set chapters = collections.bookChapters[book] %}
+{% set chapterIndex = 0 %}
+{% for ch in chapters %}
+  {% if ch.url == page.url %}
+    {% set chapterIndex = loop.index0 %}
+  {% endif %}
+{% endfor %}
+{% if chapterIndex > 0 %}<a href="{{ chapters[chapterIndex - 1].url }}" class="prev">← 上一章</a>{% endif %}
+<span class="chapter-info">第 {{ chapterIndex + 1 }} 章</span>
+{% if chapterIndex < chapters.length - 1 %}<a href="{{ chapters[chapterIndex + 1].url }}" class="next">下一章 →</a>{% endif %}
+</nav>
+
+<nav class="book-nav">
+<a href="/books/{{ book }}/">返回目录</a>
+</nav>
+{% endblock %}

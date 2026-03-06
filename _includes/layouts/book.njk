@@ -1,0 +1,8 @@
+---
+templateClass: tmpl-book
+---
+{% extends "layouts/base.njk" %}
+
+{% block article %}
+{{ content | safe }}
+{% endblock %}

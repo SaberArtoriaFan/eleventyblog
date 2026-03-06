@@ -1,0 +1,51 @@
+---
+layout: layouts/book.njk
+pagination:
+  data: collections.books
+  size: 1
+  alias: book
+  addAllPagesToCollections: true
+eleventyComputed:
+  bookName: "{{ book.name }}"
+  permalink: "/books/{{ book.name }}/index.html"
+---
+
+<div class="book-detail">
+  <div class="book-info">
+    {% if book.cover %}
+    <div class="book-cover-large">
+      <img src="{{ book.cover }}" alt="{{ bookName }}">
+    </div>
+    {% endif %}
+    <div class="book-meta">
+      <h1>{{ bookName }}</h1>
+      <p class="chapter-count">{{ book.chapters | length }} 章</p>
+    </div>
+  </div>
+
+  {% if book.preface %}
+  <div class="book-preface">
+    <h2>前言</h2>
+    <div class="preface-content">
+      {{ book.preface.content | safe }}
+    </div>
+  </div>
+  {% endif %}
+
+  <section class="chapters-list">
+    <h2>📖 章节目录</h2>
+    {% if book.chapters %}
+    <ol>
+    {% for chapter in book.chapters %}
+      <li>
+        <a href="{{ chapter.url }}">{{ chapter.data.title }}</a>
+      </li>
+    {% endfor %}
+    </ol>
+    {% else %}
+    <p>暂无章节</p>
+    {% endif %}
+  </section>
+</div>
+
+<a href="/" class="back-link">← 返回书架</a>
