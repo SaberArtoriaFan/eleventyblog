@@ -293,15 +293,58 @@ module.exports = function (eleventyConfig) {
   });
 
   /* Markdown Overrides */
+  // 自定义 markdown-it 插件：把单个换行转成段落分隔
+  function novelParagraphPlugin(md) {
+    // 在 block 规则前添加预处理
+    md.core.ruler.before('block', 'novel_paragraphs', function(state) {
+      const src = state.src;
+      // 把单个换行替换成双换行（跳过已有的双换行和空行）
+      // 匹配：非换行字符 + 单个换行 + 非换行字符
+      let result = '';
+      let i = 0;
+      while (i < src.length) {
+        if (src[i] === '\n') {
+          // 检查后面是否还有换行
+          let j = i + 1;
+          while (j < src.length && src[j] === '\n') {
+            j++;
+          }
+          // 如果只有一个换行（j == i + 1），且前后都有内容，转成双换行
+          if (j === i + 1 && i > 0 && i < src.length - 1) {
+            // 检查前面不是换行，后面不是换行
+            if (src[i - 1] !== '\n' && src[i + 1] && src[i + 1] !== '\n') {
+              result += '\n\n';
+              i++;
+              continue;
+            }
+          }
+          result += src.substring(i, j);
+          i = j;
+        } else {
+          result += src[i];
+          i++;
+        }
+      }
+      state.src = result;
+    });
+
+    // 给段落添加 class
+    md.renderer.rules.paragraph_open = function(tokens, idx, options, env, self) {
+      return '<p class="novel-paragraph">';
+    };
+  }
+
   let markdownLibrary = markdownIt({
     html: true,
-    breaks: true,
+    breaks: false,
     linkify: true,
+    typographer: true,
   }).use(markdownItAnchor, {
     permalink: true,
     permalinkClass: "direct-link",
     permalinkSymbol: "#",
-  });
+  }).use(novelParagraphPlugin);
+
   eleventyConfig.setLibrary("md", markdownLibrary);
 
   // After the build touch any file in the test directory to do a test run.

@@ -844,7 +844,10 @@ body {
 section {
   margin-left: auto;
   margin-right: auto;
-  width: 900px;
+  max-width: 900px;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 #menu-toggle {
   display: none;
@@ -1271,14 +1274,6 @@ a {
   margin-bottom: 1rem;
 }
 
-@media (max-width: 600px) {
-  .book-info {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-}
-
 .tmpl-book article {
   max-width: 50rem;
 }
@@ -1367,6 +1362,7 @@ a {
 }
 
 /* 章节阅读页 */
+/*! purgecss start ignore */
 .reader-settings {
   position: fixed;
   top: 60px;
@@ -1453,9 +1449,19 @@ a {
   word-break: break-word;
 }
 
-.chapter-content p {
-  margin-bottom: 1.5em;
-  text-indent: 2em;
+.chapter-content p,
+.chapter-content .novel-paragraph,
+.chapter-content li,
+.chapter-content ol,
+.chapter-content ul {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+.chapter-content p,
+.chapter-content .novel-paragraph {
+  margin-bottom: var(--paragraph-gap, 1.5em);
+  text-indent: 2em !important;
 }
 
 .chapter-content h2, .chapter-content h3 {
@@ -1468,6 +1474,7 @@ a {
 .tmpl-chapter header > h1 {
   display: none;
 }
+/*! purgecss end ignore */
 
 .tmpl-chapter article {
   max-width: 60rem;
@@ -1535,13 +1542,59 @@ a {
   text-decoration: none;
 }
 
+/*! purgecss start ignore */
 /* 响应式 */
 @media (max-width: 600px) {
+  /* 书架主页 */
+  .books-gallery h1 {
+    font-size: 1.8rem;
+  }
+
+  .books-gallery > p {
+    padding: 0 1rem;
+  }
+
   .books-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .book-card h2 {
+    font-size: 0.95rem;
+    margin: 0.5rem 0 0.2rem;
+    padding: 0 0.5rem;
+  }
+
+  .book-card .chapter-count {
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .book-card .book-cover-placeholder {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  /* 书籍详情页 */
+  .book-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 1rem;
   }
 
+  .book-cover-large img {
+    width: 140px;
+    max-width: 140px;
+  }
+
+  .book-meta h1 {
+    font-size: 1.5rem;
+  }
+
+  /* 章节阅读页 */
   .chapter-nav {
     flex-wrap: wrap;
     text-align: center;
@@ -1552,4 +1605,30 @@ a {
     order: -1;
     margin-bottom: 0.5rem;
   }
+
+  .reader-settings {
+    right: 10px;
+    top: 50px;
+  }
+
+  .settings-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .chapter-title {
+    font-size: 1.5rem;
+  }
+
+  .chapter-content {
+    font-size: 16px;
+  }
+
+  .chapter-content p,
+  .chapter-content .novel-paragraph {
+    text-indent: 2em !important;
+    margin-bottom: var(--paragraph-gap, 1.5em);
+  }
 }
+/*! purgecss end ignore */

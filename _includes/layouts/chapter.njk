@@ -28,6 +28,11 @@ templateClass: tmpl-chapter
       <input type="range" id="line-height" min="16" max="28" value="20">
       <span id="line-height-value">2.0</span>
     </div>
+    <div class="setting-item">
+      <label>段间距</label>
+      <input type="range" id="paragraph-gap" min="5" max="40" value="15">
+      <span id="paragraph-gap-value">1.5em</span>
+    </div>
   </div>
 </div>
 
@@ -58,67 +63,70 @@ templateClass: tmpl-chapter
 </nav>
 </div>
 
-<script>
+<script csp-hash>
 (function() {
-  const wrapper = document.getElementById('chapter-wrapper');
-  const content = document.getElementById('chapter-content');
-  const settings = {
-    fontSize: document.getElementById('font-size'),
-    contentWidth: document.getElementById('content-width'),
-    lineHeight: document.getElementById('line-height')
-  };
+  var wrapper = document.getElementById('chapter-wrapper');
+  var content = document.getElementById('chapter-content');
+  var fontSizeInput = document.getElementById('font-size');
+  var widthInput = document.getElementById('content-width');
+  var lineHeightInput = document.getElementById('line-height');
+  var paragraphGapInput = document.getElementById('paragraph-gap');
+  var fontSizeVal = document.getElementById('font-size-value');
+  var widthVal = document.getElementById('content-width-value');
+  var lineHeightVal = document.getElementById('line-height-value');
+  var paragraphGapVal = document.getElementById('paragraph-gap-value');
+  var toggle = document.querySelector('.settings-toggle');
+  var panel = document.querySelector('.settings-panel');
 
-  // 从 localStorage 读取设置
-  function loadSettings() {
-    const saved = localStorage.getItem('reader-settings');
-    if (saved) {
-      const s = JSON.parse(saved);
-      settings.fontSize.value = s.fontSize || 18;
-      settings.contentWidth.value = s.contentWidth || 800;
-      settings.lineHeight.value = s.lineHeight || 20;
-    }
-    applySettings();
-  }
-
-  // 应用设置
   function applySettings() {
-    const fs = settings.fontSize.value + 'px';
-    const w = settings.contentWidth.value + 'px';
-    const lh = (settings.lineHeight.value / 10).toFixed(1);
+    var fs = fontSizeInput.value + 'px';
+    var w = widthInput.value + 'px';
+    var lh = (lineHeightInput.value / 10).toFixed(1);
+    var pg = (paragraphGapInput.value / 10).toFixed(1) + 'em';
 
     wrapper.style.maxWidth = w;
     content.style.fontSize = fs;
     content.style.lineHeight = lh;
+    content.style.setProperty('--paragraph-gap', pg);
 
-    document.getElementById('font-size-value').textContent = fs;
-    document.getElementById('content-width-value').textContent = w;
-    document.getElementById('line-height-value').textContent = lh;
+    fontSizeVal.textContent = fs;
+    widthVal.textContent = w;
+    lineHeightVal.textContent = lh;
+    paragraphGapVal.textContent = pg;
   }
 
-  // 保存设置
   function saveSettings() {
     localStorage.setItem('reader-settings', JSON.stringify({
-      fontSize: settings.fontSize.value,
-      contentWidth: settings.contentWidth.value,
-      lineHeight: settings.lineHeight.value
+      fontSize: fontSizeInput.value,
+      contentWidth: widthInput.value,
+      lineHeight: lineHeightInput.value,
+      paragraphGap: paragraphGapInput.value
     }));
   }
 
-  // 绑定事件
-  settings.fontSize.addEventListener('input', () => { applySettings(); saveSettings(); });
-  settings.contentWidth.addEventListener('input', () => { applySettings(); saveSettings(); });
-  settings.lineHeight.addEventListener('input', () => { applySettings(); saveSettings(); });
+  function loadSettings() {
+    var saved = localStorage.getItem('reader-settings');
+    if (saved) {
+      var s = JSON.parse(saved);
+      fontSizeInput.value = s.fontSize || 18;
+      widthInput.value = s.contentWidth || 800;
+      lineHeightInput.value = s.lineHeight || 20;
+      paragraphGapInput.value = s.paragraphGap || 15;
+    }
+    applySettings();
+  }
 
-  // 设置面板开关
-  const toggle = document.querySelector('.settings-toggle');
-  const panel = document.querySelector('.settings-panel');
-  toggle.addEventListener('click', (e) => {
+  fontSizeInput.addEventListener('input', function() { applySettings(); saveSettings(); });
+  widthInput.addEventListener('input', function() { applySettings(); saveSettings(); });
+  lineHeightInput.addEventListener('input', function() { applySettings(); saveSettings(); });
+  paragraphGapInput.addEventListener('input', function() { applySettings(); saveSettings(); });
+
+  toggle.addEventListener('click', function(e) {
     e.stopPropagation();
     panel.classList.toggle('open');
   });
 
-  // 点击其他地方关闭面板
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', function(e) {
     if (!e.target.closest('.reader-settings')) {
       panel.classList.remove('open');
     }

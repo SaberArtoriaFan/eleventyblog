@@ -7,6 +7,4 @@ eleventyNavigation:
   order: 3
 ---
 
-I am a person that writes stuff.
-
-This blog template is based on [eleventy-high-performance-blog](https://www.industrialempathy.com/posts/eleventy-high-performance-blog/) which itself is based on [eleventy-base-blog](https://github.com/11ty/eleventy-base-blog).
+这是一个朋友间的跑团记录图书馆，欢迎你的浏览！如果您也想贡献书籍，可以[点击此](https://github.com/SaberArtoriaFan/eleventyblog)，将您的书籍提交到 books 文件夹内！欢迎提交 Pull Request。
