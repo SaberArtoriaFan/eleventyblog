@@ -18,7 +18,7 @@
 
 ```bash
 # 克隆您 fork 的仓库
-git clone https://github.com/YOUR_USERNAME/eleventyblog.git
+git clone https://github.com/SaberArtoriaFan/eleventyblog.git
 cd eleventyblog
 
 # 安装依赖
@@ -113,7 +113,7 @@ We welcome contributions via Pull Request! Here's how:
 
 ```bash
 # Clone your forked repository
-git clone https://github.com/YOUR_USERNAME/eleventyblog.git
+git clone https://github.com/SaberArtoriaFan/eleventyblog.git
 cd eleventyblog
 
 # Install dependencies
