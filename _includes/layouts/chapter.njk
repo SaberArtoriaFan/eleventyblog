@@ -10,7 +10,33 @@ templateClass: tmpl-chapter
 {% endblock %}
 
 {% block article %}
+<div class="reader-settings">
+  <button class="settings-toggle" aria-label="阅读设置">⚙️</button>
+  <div class="settings-panel">
+    <div class="setting-item">
+      <label>字号</label>
+      <input type="range" id="font-size" min="14" max="24" value="18">
+      <span id="font-size-value">18px</span>
+    </div>
+    <div class="setting-item">
+      <label>宽度</label>
+      <input type="range" id="content-width" min="600" max="1000" value="800">
+      <span id="content-width-value">800px</span>
+    </div>
+    <div class="setting-item">
+      <label>行高</label>
+      <input type="range" id="line-height" min="16" max="28" value="20">
+      <span id="line-height-value">2.0</span>
+    </div>
+  </div>
+</div>
+
+<div class="chapter-wrapper" id="chapter-wrapper">
+<h1 class="chapter-title">{{ title }}</h1>
+
+<div class="chapter-content" id="chapter-content">
 {{ content | safe }}
+</div>
 
 <hr>
 
@@ -30,4 +56,75 @@ templateClass: tmpl-chapter
 <nav class="book-nav">
 <a href="/books/{{ book }}/">返回目录</a>
 </nav>
+</div>
+
+<script>
+(function() {
+  const wrapper = document.getElementById('chapter-wrapper');
+  const content = document.getElementById('chapter-content');
+  const settings = {
+    fontSize: document.getElementById('font-size'),
+    contentWidth: document.getElementById('content-width'),
+    lineHeight: document.getElementById('line-height')
+  };
+
+  // 从 localStorage 读取设置
+  function loadSettings() {
+    const saved = localStorage.getItem('reader-settings');
+    if (saved) {
+      const s = JSON.parse(saved);
+      settings.fontSize.value = s.fontSize || 18;
+      settings.contentWidth.value = s.contentWidth || 800;
+      settings.lineHeight.value = s.lineHeight || 20;
+    }
+    applySettings();
+  }
+
+  // 应用设置
+  function applySettings() {
+    const fs = settings.fontSize.value + 'px';
+    const w = settings.contentWidth.value + 'px';
+    const lh = (settings.lineHeight.value / 10).toFixed(1);
+
+    wrapper.style.maxWidth = w;
+    content.style.fontSize = fs;
+    content.style.lineHeight = lh;
+
+    document.getElementById('font-size-value').textContent = fs;
+    document.getElementById('content-width-value').textContent = w;
+    document.getElementById('line-height-value').textContent = lh;
+  }
+
+  // 保存设置
+  function saveSettings() {
+    localStorage.setItem('reader-settings', JSON.stringify({
+      fontSize: settings.fontSize.value,
+      contentWidth: settings.contentWidth.value,
+      lineHeight: settings.lineHeight.value
+    }));
+  }
+
+  // 绑定事件
+  settings.fontSize.addEventListener('input', () => { applySettings(); saveSettings(); });
+  settings.contentWidth.addEventListener('input', () => { applySettings(); saveSettings(); });
+  settings.lineHeight.addEventListener('input', () => { applySettings(); saveSettings(); });
+
+  // 设置面板开关
+  const toggle = document.querySelector('.settings-toggle');
+  const panel = document.querySelector('.settings-panel');
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    panel.classList.toggle('open');
+  });
+
+  // 点击其他地方关闭面板
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.reader-settings')) {
+      panel.classList.remove('open');
+    }
+  });
+
+  loadSettings();
+})();
+</script>
 {% endblock %}
