@@ -1,158 +1,223 @@
-# eleventy-high-performance-blog
+# 📚 跑团图书馆 / TRPG Library
 
-A starter repository for building a blog with the [Eleventy static site generator](https://www.11ty.dev/) implementing a wide range of performance best practices.
+[中文](#中文) | [English](#english)
 
-![Screenshot showing that the site achieves 100 points on Lighthouse by default](https://cdn.glitch.com/db98564e-04da-47bf-a3d6-70803c3d0fe7%2FScreen%20Shot%202020-09-04%20at%2012.07.27.png?v=1599214260591)
+---
 
-Based on the awesome [eleventy-base-blog](https://github.com/11ty/eleventy-base-blog).
+<a name="中文"></a>
 
-## Demo
+## 中文
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fgoogle%2Feleventy-high-performance-blog)
+一个基于 [Eleventy](https://www.11ty.dev/) 构建的高性能小说/跑团记录图书馆网站。
 
-- [Demo](https://eleventy-high-performance-blog-sample.industrialempathy.com/)
-- [Original site this template was based on](https://www.industrialempathy.com/)
+### 📖 如何贡献书籍
 
-## Getting Started
+欢迎通过 Pull Request 提交您的作品！以下是详细步骤：
 
-### 1. Generate a new repository from this repository template
+#### 1. Fork 并克隆仓库
 
-Click the ["Use this template"](https://github.com/google/eleventy-high-performance-blog/generate) button. Alternatively you can clone this repo yourself and push your copy to your favorite git repository.
+```bash
+# 克隆您 fork 的仓库
+git clone https://github.com/YOUR_USERNAME/eleventyblog.git
+cd eleventyblog
 
-### 2. Clone your new repository
-
-```
-git clone https://github.com/YOUR_REPO
-```
-
-### 3. Navigate to the directory
-
-```
-cd my-blog-name
-```
-
-### 4. Install dependencies
-
-```
+# 安装依赖
 npm install
 ```
 
-### 5. Build, serve, watch and test
+#### 2. 创建新书籍
+
+在 `books/` 文件夹下创建一个新文件夹，以书籍名称命名（建议使用英文或拼音）：
 
 ```
-npm run watch
+books/
+└── 我的跑团记录/           # 书籍文件夹名称
+    ├── cover.jpg          # 封面图片（可选）
+    ├── preface.md         # 前言/简介（可选）
+    ├── 01-序章.md         # 第一章
+    ├── 02-初遇.md         # 第二章
+    ├── 03-冒险开始.md     # 第三章
+    └── ...
 ```
 
-### 6. Build and test
+#### 3. 文件命名规则
+
+| 文件类型 | 命名规则 | 说明 |
+|---------|---------|------|
+| 封面图片 | `cover.jpg` / `cover.png` / `cover.webp` / `cover.avif` | 放在书籍文件夹根目录，系统自动识别 |
+| 前言 | `preface.md` | 书籍介绍、阅读须知等，会显示在书籍详情页 |
+| 章节 | `序号-章节名.md` | 如 `01-序章.md`、`02-初遇.md` |
+
+**章节命名示例：**
+```
+01-剑湾上空的告别.md     → 第一章：剑湾上空的告别
+02-暗影降临.md           → 第二章：暗影降临
+10-最终决战.md           → 第十章：最终决战
+```
+
+#### 4. Markdown 文件格式
+
+章节文件支持标准 Markdown 格式：
+
+```markdown
+---
+# 可选：手动指定标题和顺序（不填写则自动从文件名提取）
+# title: 第一章
+# order: 1
+---
+
+这里是正文内容...
+
+每个段落会自动缩进。
+
+换行会自动生成新段落。
+```
+
+#### 5. 本地预览
+
+```bash
+# 启动开发服务器
+npx eleventy --serve
+
+# 访问 http://localhost:8080 预览效果
+```
+
+#### 6. 提交 Pull Request
+
+```bash
+# 添加修改
+git add books/我的跑团记录/
+
+# 提交
+git commit -m "添加新书籍：我的跑团记录"
+
+# 推送到您的 fork
+git push origin main
+
+# 然后在 GitHub 上创建 Pull Request
+```
+
+---
+
+<a name="english"></a>
+
+## English
+
+A high-performance novel/TRPG library website built with [Eleventy](https://www.11ty.dev/).
+
+### 📖 How to Contribute Books
+
+We welcome contributions via Pull Request! Here's how:
+
+#### 1. Fork and Clone the Repository
+
+```bash
+# Clone your forked repository
+git clone https://github.com/YOUR_USERNAME/eleventyblog.git
+cd eleventyblog
+
+# Install dependencies
+npm install
+```
+
+#### 2. Create a New Book
+
+Create a new folder under `books/` with your book name:
 
 ```
+books/
+└── my-trpg-story/         # Book folder name
+    ├── cover.jpg          # Cover image (optional)
+    ├── preface.md         # Preface/introduction (optional)
+    ├── 01-prologue.md     # Chapter 1
+    ├── 02-first-meeting.md    # Chapter 2
+    ├── 03-adventure-begins.md # Chapter 3
+    └── ...
+```
+
+#### 3. File Naming Rules
+
+| File Type | Naming Rule | Description |
+|-----------|-------------|-------------|
+| Cover image | `cover.jpg` / `cover.png` / `cover.webp` / `cover.avif` | Place in book folder root, auto-detected |
+| Preface | `preface.md` | Book introduction, rules, etc. |
+| Chapters | `number-chapter-name.md` | e.g., `01-prologue.md`, `02-first-meeting.md` |
+
+**Chapter naming examples:**
+```
+01-farewell-above-sword-bay.md  → Chapter 1: Farewell Above Sword Bay
+02-shadow-descends.md           → Chapter 2: Shadow Descends
+10-final-battle.md              → Chapter 10: Final Battle
+```
+
+#### 4. Markdown File Format
+
+Chapter files support standard Markdown:
+
+```markdown
+---
+# Optional: manually specify title and order
+# title: Chapter 1
+# order: 1
+---
+
+Your content here...
+
+Each paragraph will be automatically indented.
+
+Line breaks create new paragraphs.
+```
+
+#### 5. Preview Locally
+
+```bash
+# Start development server
+npx eleventy --serve
+
+# Visit http://localhost:8080 to preview
+```
+
+#### 6. Submit Pull Request
+
+```bash
+# Add changes
+git add books/my-trpg-story/
+
+# Commit
+git commit -m "Add new book: My TRPG Story"
+
+# Push to your fork
+git push origin main
+
+# Then create a Pull Request on GitHub
+```
+
+---
+
+## 🚀 Development / 开发
+
+```bash
+# Install dependencies / 安装依赖
+npm install
+
+# Development mode / 开发模式
+npx eleventy --serve
+
+# Build for production / 生产构建
 npm run build
+
+# Run tests / 运行测试
+npm test
 ```
 
-## Customize
+## 📄 License / 许可证
 
-- Search for "Update me" across files in your editor to find all the site specific things you should update.
-- Update the favicons in 'img/favicon/'.
-- Otherwise: Knock yourself out. This is a template repository.
-- For a simple color override, adjust these CSS variables at the top of `css/main.css`.
+MIT License
 
-```css
-:root {
-  --primary: #e7bf60;
-  --primary-dark: #f9c412;
-}
-```
+---
 
-## Features
+## 🙏 Acknowledgments / 致谢
 
-### Performance outcomes
+This project is based on [google/eleventy-high-performance-blog](https://github.com/google/eleventy-high-performance-blog) by [Malte Ubl](https://twitter.com/cramforce).
 
-- Perfect score in applicable lighthouse audits (including accessibility).
-- Single HTTP request to [First Contentful Paint](https://web.dev/first-contentful-paint/).
-- Very optimized [Largest Contentful Paint](https://web.dev/lcp/) (score depends on image usage, but images are optimized).
-- 0 [Cumulative Layout Shift](https://web.dev/cls/).
-- ~0 [First Input Delay](https://web.dev/fid/).
-
-### Performance optimizations
-
-#### Images
-
-- Generates multiple sizes of each image and uses them in **`srcset`**.
-- Generates a **blurry placeholder** for each image (without adding an HTML element or using JS).
-- Transcodes images to [AVIF](<https://en.wikipedia.org/wiki/AV1#AV1_Image_File_Format_(AVIF)>) and [webp](https://developers.google.com/speed/webp) and generates `picture` element.
-- Transcodes GIFs to muted looping autoplaying MP4 videos for greatly reduced file size.
-- **Lazy loads** images (using [native `loading=lazy`](https://web.dev/native-lazy-loading/)).
-- **Async decodes** images (using `decoding=async`).
-- **Lazy layout** of images and placeholders using [`content-visibility: auto`](https://web.dev/content-visibility/#skipping-rendering-work-with-content-visibility).
-- **Avoids CLS impact** of images by inferring and providing width and height (Supported in Chrome, Firefox and Safari 14+).
-- Downloads remote images and stores/serves them locally.
-- Immutable URLs.
-
-#### CSS
-
-- Defaults to the compact "classless" [Bahunya CSS framework](https://kimeiga.github.io/bahunya/).
-- Inlines CSS.
-- Dead-code-eliminates / tree-shakes / purges (pick your favorite word) unused CSS on a per-page basis with [PurgeCSS](https://purgecss.com/).
-- Minified CSS with [csso](https://www.npmjs.com/package/csso).
-
-#### Miscellaneous
-
-- Immutable URLs for JS.
-- Sets immutable caching headers for images, fonts, and JS (CSS is inlined). Automatically configured when deploying on [Vercel](https://vercel.com/)
-- Uses [html-minifier](https://www.npmjs.com/package/html-minifier) with aggressive options.
-- Uses [rollup](https://rollupjs.org/) to bundle JS and minifies it with [terser](https://terser.org/).
-- Prefetches same-origin navigations when a navigation is likely.
-- If an AMP files is present, [optimizes it](https://amp.dev/documentation/guides-and-tutorials/optimize-and-measure/optimize_amp/).
-
-#### Fonts
-
-- Serves fonts from same origin.
-- Makes fonts `display:optional`.
-
-#### Analytics
-
-- Supports locally serving Google Analytics's JS and proxying it's hit requests to a Vercel Edge Function (other proxies could be easily added).
-- Supports sending [Core Web Vitals](https://web.dev/vitals/) metrics to Google Analytics as [events](https://github.com/GoogleChrome/web-vitals#send-the-results-to-google-analytics).
-- Support for noscript hit requests.
-- Avoids blocking onload on analytics requests.
-- To turn this on, specify `googleAnalyticsId` in `metadata.json`. (Note, that this is not compatible with the not-yet-commonly used version 4 of Google Analytics.)
-
-### DX features
-
-- Uses 🚨 as favicon during local development.
-- Supports a range of default tests.
-- Runs build and tests on `git push`.
-- Sourcemap generated for JS.
-
-### SEO & Social
-
-- Share button preferring `navigator.share()` and falling back to Twitter. Using OS-like share-icon.
-- Support for OGP metadata.
-- Support for Twitter metadata.
-- Support for schema.org JSON-LD.
-- Sitemap.xml generation.
-
-### Largely useless glitter
-
-- Read time estimate.
-- Animated scroll progress bar…
-- …with an optimized implementation that should never cause a layout.
-
-### Security
-
-Generates a strong [Content-Security-Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) for the base template.
-
-- Default-src is self.
-- Disallows plugins.
-- Generates hash based CSP for the JS used on the site.
-- To extend the CSP with new rules, see [CSP.js](https://github.com/google/eleventy-high-performance-blog/blob/main/_data/csp.js#L22)
-
-### Build performance
-
-- Downloaded remote images, and generated sizes are cached in the local filesystem…
-- …and SHOULD be committed to git.
-- `.persistimages.sh` helps with this.
-
-## Disclaimer
-
-This is not an officially supported Google product, but rather [Malte's](https://twitter.com/cramforce) private best-effort open-source project.
+本项目基于 [google/eleventy-high-performance-blog](https://github.com/google/eleventy-high-performance-blog) 构建，感谢 [Malte Ubl](https://twitter.com/cramforce) 的开源贡献。

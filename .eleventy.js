@@ -262,9 +262,25 @@ module.exports = function (eleventyConfig) {
         name: bookName,
         chapters: chapters,
         cover: cover,
-        preface: preface
+        preface: preface,
+        bookPath: path.join('books', bookName)
       });
     }
+
+    // 按书籍文件夹的上传时间排序（最新的在前面）
+    books.sort((a, b) => {
+      try {
+        const statA = fs.statSync(a.bookPath);
+        const statB = fs.statSync(b.bookPath);
+        // 按修改时间降序排列（最新的在前）
+        return statB.mtime.getTime() - statA.mtime.getTime();
+      } catch (e) {
+        return 0;
+      }
+    });
+
+    // 移除临时的 bookPath 属性
+    books.forEach(book => delete book.bookPath);
 
     return books;
   });
