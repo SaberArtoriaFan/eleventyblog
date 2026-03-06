@@ -13,7 +13,9 @@
     "debug": "DEBUG=* eleventy && npm run test",
     "test": "mocha test/test*.js",
     "test-watch": "mocha test/test*.js --watch --watch-files=test/*",
-    "clean": "rm -Rf ./_site/posts/*"
+    "clean": "rm -Rf ./_site/posts/*",
+    "deploy": "npm run build-ci && wrangler deploy",
+    "preview": "npm run build-ci && wrangler dev"
   },
   "pre-push": [
     "build"
@@ -43,7 +45,8 @@
     "pre-commit": "^1.2.2",
     "pre-push": "^0.1.4",
     "rollup-plugin-terser": "^6.1.0",
-    "shorthash": "0.0.2"
+    "shorthash": "0.0.2",
+    "wrangler": "^4.71.0"
   },
   "dependencies": {
     "@ampproject/toolbox-optimizer": "^2.9.0",

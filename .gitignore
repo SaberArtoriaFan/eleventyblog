@@ -6,3 +6,10 @@ js/min.js.map
 .vscode/
 .netlify/
 export
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
