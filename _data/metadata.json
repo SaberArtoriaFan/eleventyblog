@@ -1,13 +1,13 @@
 {
-  "title": "我的小说书架",
+  "title": "跑团图书馆",
   "url": "https://your-domain.com",
   "domain": "your-domain.com",
-  "description": "个人原创小说作品集",
+  "description": "跑团记录与小说作品图书馆",
   "genre": "Fiction",
   "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
-    "subtitle": "原创小说更新",
+    "subtitle": "跑团图书馆更新",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
     "id": "https://your-domain.com"
@@ -17,10 +17,10 @@
     "url": "https://your-domain.com/feed/feed.json"
   },
   "author": {
-    "name": "作者名",
+    "name": "柠檬三花茶",
     "twitterHandle": ""
   },
   "publisher": {
-    "name": "个人出版"
+    "name": "跑团图书馆"
   }
 }

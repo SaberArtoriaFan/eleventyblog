@@ -1545,7 +1545,22 @@ a {
 /*! purgecss start ignore */
 /* 响应式 */
 @media (max-width: 600px) {
+  /* 全局修复 */
+  main {
+    max-width: 100vw;
+  }
+
+  article {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+  }
+
   /* 书架主页 */
+  .books-gallery {
+    overflow-x: hidden;
+  }
+
   .books-gallery h1 {
     font-size: 1.8rem;
   }

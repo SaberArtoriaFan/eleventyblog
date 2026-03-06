@@ -1,9 +1,9 @@
 ---
 layout: layouts/base.njk
-title: About
+title: 关于本站
 templateClass: tmpl-post
 eleventyNavigation:
-  key: About
+  key: 关于本站
   order: 3
 ---
 
