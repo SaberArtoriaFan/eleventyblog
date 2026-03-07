@@ -20,7 +20,7 @@
 
 ```bash
 # 克隆您 fork 的仓库
-git clone https://github.com/SaberArtoriaFan/eleventyblog.git
+git clone https://github.com/SaberArtoriaFan/TRPGLibrary.git
 cd eleventyblog
 
 # 安装依赖
@@ -127,7 +127,7 @@ We welcome contributions via Pull Request! Here's how:
 First, click the **Fork** button at the top right of this page to fork the repository to your account.
 
 ```bash
-git clone https://github.com/SaberArtoriaFan/eleventyblog.git
+git clone https://github.com/SaberArtoriaFan/TRPGLibrary.git
 cd eleventyblog
 
 # Install dependencies
