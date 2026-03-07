@@ -16,6 +16,8 @@
 
 #### 1. Fork 并克隆仓库
 
+首先，点击页面右上角的 **Fork** 按钮将仓库 Fork 到您的账号下。
+
 ```bash
 # 克隆您 fork 的仓库
 git clone https://github.com/SaberArtoriaFan/eleventyblog.git
@@ -33,11 +35,21 @@ npm install
 books/
 └── 我的跑团记录/           # 书籍文件夹名称
     ├── cover.jpg          # 封面图片（可选）
+    ├── author.md          # 作者信息（可选，支持多行）
     ├── preface.md         # 前言/简介（可选）
     ├── 01-序章.md         # 第一章
     ├── 02-初遇.md         # 第二章
     ├── 03-冒险开始.md     # 第三章
     └── ...
+
+**author.md 示例：**
+```markdown
+**KP:DDD**
+李铁柱:三花
+程昱安:20
+叶嘉:铃兰
+```
+显示效果：每行 `标签:名称`，标签明黄色，名称白色。支持 `**加粗**` 语法。
 ```
 
 #### 3. 文件命名规则
@@ -45,6 +57,7 @@ books/
 | 文件类型 | 命名规则 | 说明 |
 |---------|---------|------|
 | 封面图片 | `cover.jpg` / `cover.png` / `cover.webp` / `cover.avif` | 放在书籍文件夹根目录，系统自动识别 |
+| 作者 | `author.md` | 作者信息，显示在书籍详情页前言之前。支持多行，每行格式：`标签：名称`，标签为明黄色，名称为白色 |
 | 前言 | `preface.md` | 书籍介绍、阅读须知等，会显示在书籍详情页 |
 | 章节 | `序号-章节名.md` | 如 `01-序章.md`、`02-初遇.md` |
 
@@ -111,8 +124,9 @@ We welcome contributions via Pull Request! Here's how:
 
 #### 1. Fork and Clone the Repository
 
+First, click the **Fork** button at the top right of this page to fork the repository to your account.
+
 ```bash
-# Clone your forked repository
 git clone https://github.com/SaberArtoriaFan/eleventyblog.git
 cd eleventyblog
 
@@ -128,11 +142,20 @@ Create a new folder under `books/` with your book name:
 books/
 └── my-trpg-story/         # Book folder name
     ├── cover.jpg          # Cover image (optional)
+    ├── author.md          # Author info (optional, multiple lines supported)
     ├── preface.md         # Preface/introduction (optional)
     ├── 01-prologue.md     # Chapter 1
     ├── 02-first-meeting.md    # Chapter 2
     ├── 03-adventure-begins.md # Chapter 3
     └── ...
+
+**author.md example:**
+```markdown
+**KP:DDD**
+John:Player1
+Jane:Player2
+```
+Display: Each line shows `Label:Name`, label in yellow, name in white. Supports `**bold**` syntax.
 ```
 
 #### 3. File Naming Rules
@@ -140,6 +163,7 @@ books/
 | File Type | Naming Rule | Description |
 |-----------|-------------|-------------|
 | Cover image | `cover.jpg` / `cover.png` / `cover.webp` / `cover.avif` | Place in book folder root, auto-detected |
+| Author | `author.md` | Author info, shown before preface on book page. Supports multiple lines, format: `Label: Name` per line (label in yellow, name in white) |
 | Preface | `preface.md` | Book introduction, rules, etc. |
 | Chapters | `number-chapter-name.md` | e.g., `01-prologue.md`, `02-first-meeting.md` |
 

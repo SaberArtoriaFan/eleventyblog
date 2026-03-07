@@ -215,11 +215,11 @@ module.exports = function (eleventyConfig) {
     // 对每本书的章节排序，并返回数组结构
     const books = [];
     for (let bookName in booksMap) {
-      // 过滤掉 preface.md（前言单独处理）
+      // 过滤掉 preface.md 和 author.md（这些单独处理）
       const allItems = booksMap[bookName];
       const chapters = allItems.filter(item => {
         const slug = item.inputPath.replace(/\\/g, '/').split('/').pop().toLowerCase();
-        return !slug.startsWith('preface');
+        return !slug.startsWith('preface') && !slug.startsWith('author');
       });
       chapters.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
 
@@ -258,11 +258,103 @@ module.exports = function (eleventyConfig) {
         }
       }
 
+      // 检测作者文件 author.md
+      let author = null;
+      const authorItem = allItems.find(item => {
+        const slug = item.inputPath.replace(/\\/g, '/').split('/').pop().toLowerCase();
+        return slug.startsWith('author');
+      });
+      if (authorItem) {
+        const authorPath = authorItem.inputPath;
+        if (fs.existsSync(authorPath)) {
+          const rawContent = fs.readFileSync(authorPath, 'utf8');
+          // 移除 front matter
+          const contentWithoutFrontMatter = rawContent.replace(/^---\n[\s\S]*?\n---\n*/, '').trim();
+          // 移除 Markdown 语法获取纯文本
+          const stripMarkdown = (text) => {
+            return text.replace(/\*\*(.+?)\*\*/g, '$1');
+          };
+          // 解析多行作者信息，每行格式：标签:名称 或 标签：名称
+          const lines = contentWithoutFrontMatter.split('\n').filter(line => line.trim());
+          const authorLines = lines.map(line => {
+            let trimmedLine = line.trim();
+            let isBold = false;
+            // 检查整行是否被 **...** 包裹
+            const boldMatch = trimmedLine.match(/^\*\*(.+)\*\*$/);
+            if (boldMatch) {
+              isBold = true;
+              trimmedLine = boldMatch[1];
+            }
+            // 解析 标签:名称 格式
+            const colonMatch = trimmedLine.match(/^([^:：]+)[：:]\s*(.+)$/);
+            if (colonMatch) {
+              return {
+                label: colonMatch[1].trim(),
+                name: colonMatch[2].trim(),
+                isBold: isBold
+              };
+            }
+            return {
+              label: null,
+              name: trimmedLine,
+              isBold: isBold
+            };
+          });
+          // 生成 HTML 和纯文本版本
+          // 分离加粗和非加粗行
+          const boldItems = authorLines.filter(item => item.isBold);
+          const normalItems = authorLines.filter(item => !item.isBold);
+
+          // 生成单行的 HTML
+          const makeItemHtml = (item, forceBold = false) => {
+            const isBold = forceBold || item.isBold;
+            const labelHtml = item.label
+              ? `<span class="author-label">${isBold ? `<strong>${item.label}</strong>` : item.label}</span><span class="author-colon">${isBold ? '<strong>：</strong>' : '：'}</span>`
+              : '';
+            const nameHtml = isBold ? `<strong>${item.name}</strong>` : item.name;
+            return `${labelHtml}<span class="author-name">${nameHtml}</span>`;
+          };
+
+          // 加粗行单独一行（居中）
+          const boldHtmlParts = boldItems.map(item => {
+            return `<div class="author-row author-row-center">${makeItemHtml(item, true)}</div>`;
+          });
+
+          // 非加粗行每两个一组（左右对齐）
+          const normalHtmlParts = [];
+          for (let i = 0; i < normalItems.length; i += 2) {
+            const item1 = normalItems[i];
+            const item2 = normalItems[i + 1];
+            if (item2) {
+              // 两个一行，左右两端对齐
+              normalHtmlParts.push(`<div class="author-row author-row-spread"><span class="author-item">${makeItemHtml(item1)}</span><span class="author-item">${makeItemHtml(item2)}</span></div>`);
+            } else {
+              // 剩下一个，左对齐
+              normalHtmlParts.push(`<div class="author-row author-row-left"><span class="author-item">${makeItemHtml(item1)}</span></div>`);
+            }
+          }
+
+          // 合并：先加粗行，再普通行
+          const authorHtml = [...boldHtmlParts, ...normalHtmlParts].join('');
+          const authorText = authorLines.map(item => {
+            if (item.label) {
+              return `${item.label}：${item.name}`;
+            }
+            return item.name;
+          }).join(', ');
+          author = {
+            html: authorHtml,
+            text: authorText
+          };
+        }
+      }
+
       books.push({
         name: bookName,
         chapters: chapters,
         cover: cover,
         preface: preface,
+        author: author,
         bookPath: path.join('books', bookName)
       });
     }
@@ -295,6 +387,11 @@ module.exports = function (eleventyConfig) {
       const match = normalizedPath.match(/books\/([^/]+)\//);
       if (match) {
         const bookName = match[1];
+        // 过滤掉 preface.md 和 author.md
+        const slug = normalizedPath.split('/').pop().toLowerCase();
+        if (slug.startsWith('preface') || slug.startsWith('author')) {
+          return; // 跳过
+        }
         if (!booksMap[bookName]) booksMap[bookName] = [];
         booksMap[bookName].push(item);
       }

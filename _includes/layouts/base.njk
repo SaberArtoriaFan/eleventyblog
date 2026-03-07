@@ -12,11 +12,7 @@
     Update me: Remove comment if you want a CSP.
     <meta http-equiv="Content-Security-Policy" content="{{ csp.regular | safe }}">
     -->
-    {% if isdevelopment %}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    {% else %}
-    <link rel="icon" href="{{ '/img/favicon/favicon-192x192.png' | addHash }}" type="image/png">
-    {% endif %}
     <meta name="theme-color" content="#f9c412">
     <meta name="robots" content="max-snippet:-1, max-image-preview: large, max-video-preview: -1">
     <title>{{ renderData.title or title or metadata.title | escape }}</title>
@@ -95,7 +91,7 @@
     </main>
 
     <footer>
-      <a href="/about/">{{ metadata.author.name }}</a>
+      <a href="/about/">{% block footerAuthor %}{{ metadata.author.name }}{% endblock %}</a>
     </footer>
 
     <!-- Current page: {{ page.url | url }} -->

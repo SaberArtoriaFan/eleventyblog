@@ -838,8 +838,9 @@ video {
 }
 body {
   font-family: var(--font-family);
-  background: #181818;
-  color: #eee;
+  background: var(--site-bg, #181818);
+  color: var(--site-text, #eee);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 section {
   margin-left: auto;
@@ -929,8 +930,8 @@ main {
   border-top: 0.5px solid #ccc;
 }
 footer {
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--site-text);
   padding: 3em;
   text-align: center;
 }
@@ -1355,6 +1356,83 @@ a {
   padding-left: 0.5rem;
 }
 
+/*! purgecss start ignore */
+.book-author-info {
+  margin-bottom: 2rem;
+  padding: 1rem 1.5rem;
+  background: #222;
+  border-radius: 8px;
+  line-height: 2;
+}
+
+/* 每一行容器 */
+.book-author-info .author-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0.25rem auto;
+}
+
+/* 加粗行：居中（用flex不用grid） */
+.book-author-info .author-row-center {
+  display: flex;
+  justify-content: center;
+  grid-template-columns: none;
+}
+
+/* 两人行：默认两列 */
+
+/* 单人左对齐：只占第一列 */
+.book-author-info .author-row-left .author-item {
+  grid-column: 1;
+}
+
+/* 每个项目 */
+.book-author-info .author-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* 标签部分：如 "KP" - 明黄色 */
+.book-author-info .author-label {
+  color: #f9c412 !important;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+/* 标签加粗 - 保持明黄色 */
+.book-author-info .author-label strong {
+  color: #f9c412 !important;
+  font-weight: 700;
+}
+
+/* 冒号 - 白色 */
+.book-author-info .author-colon {
+  color: #eee !important;
+  font-weight: normal;
+}
+
+/* 冒号加粗 - 保持白色 */
+.book-author-info .author-colon strong {
+  color: #eee !important;
+  font-weight: 700;
+}
+
+/* 名称部分：如 "DDD" - 白色 */
+.book-author-info .author-name {
+  color: #eee !important;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+/* 名称加粗 - 保持白色 */
+.book-author-info .author-name strong {
+  color: #eee !important;
+  font-weight: 700;
+}
+/*! purgecss end ignore */
+
 .back-link {
   display: inline-block;
   margin-top: 2rem;
@@ -1363,11 +1441,69 @@ a {
 
 /* 章节阅读页 */
 /*! purgecss start ignore */
+
+/* 主题变量 */
+:root {
+  --site-bg: #181818;
+  --site-text: #eee;
+  --reader-bg: #1a1a1a;
+  --reader-text: #e0e0e0;
+  --reader-link: #f9c412;
+  --reader-border: #333;
+  --reader-hr: #444;
+}
+
+[data-theme="light"] {
+  --site-bg: #ffffff;
+  --site-text: #333333;
+  --reader-bg: #ffffff;
+  --reader-text: #333333;
+  --reader-link: #0066cc;
+  --reader-border: #ddd;
+  --reader-hr: #eee;
+}
+
+[data-theme="sepia"] {
+  --site-bg: #f4ecd8;
+  --site-text: #5b4636;
+  --reader-bg: #f4ecd8;
+  --reader-text: #5b4636;
+  --reader-link: #8b5a2b;
+  --reader-border: #d4c4a8;
+  --reader-hr: #c9b896;
+}
+
 .reader-settings {
   position: fixed;
   top: 60px;
   right: 20px;
   z-index: 100;
+}
+
+.scroll-bottom-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #333;
+  color: #f9c412;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid #444;
+  transition: all 0.2s;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.scroll-bottom-btn:hover {
+  background: #444;
+  transform: scale(1.1);
 }
 
 .settings-toggle {
@@ -1380,6 +1516,11 @@ a {
   cursor: pointer;
   border: 1px solid #444;
   transition: all 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .settings-toggle:hover {
@@ -1419,6 +1560,33 @@ a {
   margin-bottom: 0.5rem;
 }
 
+.theme-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background: #2a2a2a;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-btn:hover {
+  background: #333;
+}
+
+.theme-btn.active {
+  border-color: #f9c412;
+  background: #f9c412;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(249, 196, 18, 0.5);
+}
+
 .setting-item input[type="range"] {
   width: 100%;
   margin-bottom: 0.3rem;
@@ -1434,12 +1602,15 @@ a {
 .chapter-wrapper {
   margin: 0 auto;
   max-width: 800px;
+  padding: 2rem 1rem;
+  transition: background-color 0.3s ease;
 }
 
 .chapter-title {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 2rem;
+  color: var(--reader-text);
 }
 
 .chapter-content {
@@ -1447,6 +1618,21 @@ a {
   line-height: 2;
   text-align: justify;
   word-break: break-word;
+  color: var(--reader-text);
+}
+
+/* 章节页面背景 */
+.tmpl-chapter article {
+  background: var(--reader-bg);
+  transition: background-color 0.3s ease;
+}
+
+.tmpl-chapter article a {
+  color: var(--reader-link);
+}
+
+.tmpl-chapter article hr {
+  border-color: var(--reader-hr);
 }
 
 .chapter-content p,
@@ -1495,15 +1681,15 @@ a {
   align-items: center;
   gap: 1rem;
   padding: 1.5rem 0;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #333;
+  border-top: 1px solid var(--reader-border);
+  border-bottom: 1px solid var(--reader-border);
 }
 
 .chapter-nav a {
   padding: 0.5rem 1rem;
-  background: #222;
+  background: rgba(128, 128, 128, 0.2);
   border-radius: 4px;
-  color: var(--primary);
+  color: var(--reader-link);
 }
 
 .chapter-nav a:hover {

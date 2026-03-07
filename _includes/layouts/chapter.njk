@@ -9,10 +9,20 @@ templateClass: tmpl-chapter
 </aside>
 {% endblock %}
 
+{% block footerAuthor %}{{ metadata.author.name }}{% endblock %}
+
 {% block article %}
 <div class="reader-settings">
   <button class="settings-toggle" aria-label="阅读设置">⚙️</button>
   <div class="settings-panel">
+    <div class="setting-item">
+      <label>主题</label>
+      <div class="theme-buttons">
+        <button class="theme-btn" data-theme="light" aria-label="日间模式">☀️</button>
+        <button class="theme-btn" data-theme="dark" aria-label="夜间模式">🌙</button>
+        <button class="theme-btn" data-theme="sepia" aria-label="护眼模式">🍂</button>
+      </div>
+    </div>
     <div class="setting-item">
       <label>字号</label>
       <input type="range" id="font-size" min="14" max="24" value="18">
@@ -35,6 +45,8 @@ templateClass: tmpl-chapter
     </div>
   </div>
 </div>
+
+<button class="scroll-bottom-btn" id="scroll-bottom" aria-label="跳到底部">↓</button>
 
 <div class="chapter-wrapper" id="chapter-wrapper">
 <h1 class="chapter-title">{{ title }}</h1>
@@ -100,8 +112,20 @@ templateClass: tmpl-chapter
       fontSize: fontSizeInput.value,
       contentWidth: widthInput.value,
       lineHeight: lineHeightInput.value,
-      paragraphGap: paragraphGapInput.value
+      paragraphGap: paragraphGapInput.value,
+      theme: currentTheme
     }));
+  }
+
+  var currentTheme = 'dark';
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    document.body.setAttribute('data-theme', theme);
+    // 更新按钮状态
+    document.querySelectorAll('.theme-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.theme === theme);
+    });
   }
 
   function loadSettings() {
@@ -112,6 +136,13 @@ templateClass: tmpl-chapter
       widthInput.value = s.contentWidth || 800;
       lineHeightInput.value = s.lineHeight || 20;
       paragraphGapInput.value = s.paragraphGap || 15;
+      if (s.theme) {
+        applyTheme(s.theme);
+      } else {
+        applyTheme('dark');
+      }
+    } else {
+      applyTheme('dark');
     }
     applySettings();
   }
@@ -120,6 +151,14 @@ templateClass: tmpl-chapter
   widthInput.addEventListener('input', function() { applySettings(); saveSettings(); });
   lineHeightInput.addEventListener('input', function() { applySettings(); saveSettings(); });
   paragraphGapInput.addEventListener('input', function() { applySettings(); saveSettings(); });
+
+  // 主题切换
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      applyTheme(this.dataset.theme);
+      saveSettings();
+    });
+  });
 
   toggle.addEventListener('click', function(e) {
     e.stopPropagation();
@@ -133,6 +172,15 @@ templateClass: tmpl-chapter
   });
 
   loadSettings();
+
+  // 滚动到底部按钮
+  var scrollBottomBtn = document.getElementById('scroll-bottom');
+  scrollBottomBtn.addEventListener('click', function() {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+  });
 })();
 </script>
 {% endblock %}

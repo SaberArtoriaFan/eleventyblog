@@ -23,6 +23,12 @@ eleventyComputed:
     </div>
   </div>
 
+  {% if book.author %}
+  <div class="book-author-info">
+    {{ book.author.html | safe }}
+  </div>
+  {% endif %}
+
   {% if book.preface %}
   <div class="book-preface">
     <h2>前言</h2>
@@ -34,17 +40,17 @@ eleventyComputed:
 
   <section class="chapters-list">
     <h2>📖 章节目录</h2>
-    {% if book.chapters %}
     <ol>
-    {% for chapter in book.chapters %}
+    {% if book.chapters %}
+      {% for chapter in book.chapters %}
       <li>
         <a href="{{ chapter.url }}">{{ chapter.data.title }}</a>
       </li>
-    {% endfor %}
-    </ol>
+      {% endfor %}
     {% else %}
-    <p>暂无章节</p>
+      <li><p>暂无章节</p></li>
     {% endif %}
+    </ol>
   </section>
 </div>
 
